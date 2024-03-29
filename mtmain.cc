@@ -343,6 +343,7 @@ int main(int argc, char* argv[]) {
     char* bamFile = NULL;
     char* bedFile = NULL;
     char* outFile = NULL;
+    int max_threads = 8;
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--bam") == 0) {
             bamFile = argv[++i];
@@ -350,12 +351,15 @@ int main(int argc, char* argv[]) {
             bedFile = argv[++i];
         } else if (strcmp(argv[i], "--out") == 0) {
             outFile = argv[++i];
+        } else if (strcmp(argv[i], "--threads") == 0) {
+            max_threads = atoi(argv[++i]);
         }
     }
     
     if (!bamFile || !bedFile || !outFile) {
-        fprintf(stderr, "Usage: %s --bam <bamFile> --bed <bedFile> --out <outputPrefix>\n", argv[0]);
-        fprintf(stderr, "\n  --bed supports both BED and target region format('.interva_list')\n\n");
+        fprintf(stderr, "Usage: %s --bam <bamFile> --bed <bedFile> --out <outputPrefix> [--threads <max threads>]\n", argv[0]);
+        fprintf(stderr, "\n  --bed supports both BED and target region format('.interva_list')\n");
+        fprintf(stderr, "  --threads: number of threads to use (default: 8)\n\n");
         return 1;
     }
 
@@ -384,7 +388,6 @@ int main(int argc, char* argv[]) {
     std::vector<pthread_t*> threads; // vector of IDs of threads
     std::vector<ThreadArg*> threadArgs(nTargets); // vector of arguments for threads
     std::vector<TargetResult*> results(nTargets); // vector of results
-    int max_threads = 8;
     // sem_init(&semaphore, 0, max_threads);
     std::vector<int> running_threads_indicies = std::vector<int>();
 
