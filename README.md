@@ -20,6 +20,10 @@ This efficient tool is designed to rapidly generate XHMM-compatible input files 
 - Target region file(SureSelect, Twist etc)
   - BED format or interval_list format
 
+```
+mtdoc --bam <bamFile> --bed <bedFile> --out <outputPrefix>
+```
+  --bed supports both BED and target region format('.interva_list')
 
 
 
