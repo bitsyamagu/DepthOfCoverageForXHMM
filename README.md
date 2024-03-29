@@ -21,9 +21,9 @@ This efficient tool is designed to rapidly generate XHMM-compatible input files 
   - BED format or interval_list format
 
 ```
-mtdoc --bam <bamFile> --bed <bedFile> --out <outputPrefix>
+mtdoc --bam <bamFile> --bed <bedFile> --out <outputFile> [--threads <threads>]
 ```
   --bed supports both BED and target region format('.interva_list')
 
-
+  --threads default: 8
 
