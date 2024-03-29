@@ -338,7 +338,7 @@ char* get_sample_name_from_header(sam_hdr_t *header) {
 // Main function
 // --bam: input BAM file
 // --bed: input BED file
-// --output: output file prefix 
+// --output: output file 
 int main(int argc, char* argv[]) {
     char* bamFile = NULL;
     char* bedFile = NULL;
@@ -357,7 +357,7 @@ int main(int argc, char* argv[]) {
     }
     
     if (!bamFile || !bedFile || !outFile) {
-        fprintf(stderr, "Usage: %s --bam <bamFile> --bed <bedFile> --out <outputPrefix> [--threads <max threads>]\n", argv[0]);
+        fprintf(stderr, "Usage: %s --bam <bamFile> --bed <bedFile> --out <output> [--threads <max threads>]\n", argv[0]);
         fprintf(stderr, "\n  --bed supports both BED and target region format('.interva_list')\n");
         fprintf(stderr, "  --threads: number of threads to use (default: 8)\n\n");
         return 1;
@@ -411,7 +411,6 @@ int main(int argc, char* argv[]) {
         threadArgs[i]->in = in[i % max_threads];
         threadArgs[i]->result = (TargetResult*)malloc(sizeof(TargetResult));
         results[i] = threadArgs[i]->result;
-        // スレッドを作成し、引数を渡して実行
         threads[i] = (pthread_t*)malloc(sizeof(pthread_t));
         // sem_wait(&semaphore);
         pthread_create(threads[i], NULL, processTargetRegion, (void*)threadArgs[i]);
