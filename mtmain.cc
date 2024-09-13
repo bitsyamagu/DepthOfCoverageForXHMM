@@ -23,9 +23,9 @@ typedef struct {
     double average_coverage;
     int sample_total_coverge;
     double sample_mean_coverage;
-    int sample_gulanular_Q1;
-    int sample_gulanular_median;
-    int sample_gulanular_Q3;
+    int sample_granular_Q1;
+    int sample_granular_median;
+    int sample_granular_Q3;
     float sample_percent_coverage_above_5;
 } TargetResult;
 
@@ -223,9 +223,9 @@ void* processTargetRegion(void* arg) {
     std::sort(depth, depth + len);
     int morethan5 = 0;
     double ave_coverage = (double)total / (end - start);
-    int gulanular_Q1 = depth[len / 4];
-    int gulanular_Q3 = depth[len * 3 / 4];
-    int gulanular_median = len % 2 == 0 ? (depth[len / 2 - 1] + depth[len / 2]) / 2.0 : depth[len / 2];
+    int granular_Q1 = depth[len / 4];
+    int granular_Q3 = depth[len * 3 / 4];
+    int granular_median = len % 2 == 0 ? (depth[len / 2 - 1] + depth[len / 2]) / 2.0 : depth[len / 2];
     for(int j = 0; j < len; j++){
         if (depth[j] >= 5) {
             morethan5++;
@@ -243,9 +243,9 @@ void* processTargetRegion(void* arg) {
     result->average_coverage = ave_coverage;
     result->sample_total_coverge = total;
     result->sample_mean_coverage = ave_coverage;
-    result->sample_gulanular_Q1 = gulanular_Q1 + 1;
-    result->sample_gulanular_median = gulanular_median + 1;
-    result->sample_gulanular_Q3 = gulanular_Q3 + 1;
+    result->sample_granular_Q1 = granular_Q1 + 1;
+    result->sample_granular_median = granular_median + 1;
+    result->sample_granular_Q3 = granular_Q3 + 1;
     result->sample_percent_coverage_above_5 = (float)morethan5/len*100.0;
 
     free(depth);
@@ -381,7 +381,7 @@ int main(int argc, char* argv[]) {
     // output header
     // get sample name i.e. SM tag of @RG line
     char* sample = get_sample_name_from_header(header);
-    fprintf(outFp, "Target\ttotal_coverage\taverage_coverage\t%s_total_cvg\t%s_mean_cvg\t%s_gulanular_Q1\t%s_gulanular_median\t%s_gulanular_Q3\t%s_%%_above_5\n",
+    fprintf(outFp, "Target\ttotal_coverage\taverage_coverage\t%s_total_cvg\t%s_mean_cvg\t%s_granular_Q1\t%s_granular_median\t%s_granular_Q3\t%s_%%_above_5\n",
             sample, sample, sample, sample, sample, sample);
 
     // prepare thread
@@ -447,7 +447,7 @@ int main(int argc, char* argv[]) {
         fprintf(outFp, "%s\t%d\t%.2f\t%d\t%.2f\t%d\t%d\t%d\t%.2f\n",
                 results[i]->targetName, results[i]->total_coverage, results[i]->average_coverage,
                 results[i]->sample_total_coverge, results[i]->sample_mean_coverage,
-                results[i]->sample_gulanular_Q1, results[i]->sample_gulanular_median, results[i]->sample_gulanular_Q3,
+                results[i]->sample_granular_Q1, results[i]->sample_granular_median, results[i]->sample_granular_Q3,
                 results[i]->sample_percent_coverage_above_5);
     }
     // Clean up
